@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:mf_movie_ticket_book/ui/views/main_page.dart';
 
 void main() {
     runApp(MyApp());
