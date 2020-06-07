@@ -19,39 +19,33 @@ class CustomeSlider extends StatefulWidget {
 
 class _CustomeSliderState extends State<CustomeSlider> {
     int _currentSlideIndex = 0;
+    List<Movies> listMovies = new List<Movies>();
 
     @override
     Widget build(BuildContext context) {
         return carouselSlider();
     }
 
-    FutureBuilder carouselSlideBuilder(String apiUrl) {
-        return FutureBuilder(
-            future: getMoviesApi(apiUrl),
-            builder: (BuildContext context, AsyncSnapshot asyncSnapshot) {
-                if (asyncSnapshot.hasData) {
-                    Movies movies = asyncSnapshot.data;
-
-                    return showCardSlider(movies);
-                }
-
-                return loadCardSlider();
-            },
-        );
+    void loadListMovies() async {
+        if (widget.listMoviesApi.isNotEmpty && listMovies.isEmpty) {
+            widget.listMoviesApi.forEach((moviesApi) { 
+                this.getMoviesApi(moviesApi.apiUrl);
+            });
+        }
     }
 
     Widget carouselSlider() {
+        loadListMovies();
+
         return Container(
             height: MediaQuery.of(context).size.height * 0.273,
             child: Column(
                 children: [
                     CarouselSlider(
-                        items: widget.listMoviesApi.map((listMoviesApi) {
-                            return Builder(
-                                builder: (BuildContext context) {
-                                    return carouselSlideBuilder(listMoviesApi.apiUrl);
-                                },
-                            );
+                        items: (listMovies.isEmpty) ? widget.listMoviesApi.map((e)  {
+                            return loadCardSlider();
+                        }).toList() : listMovies.map((e)  {
+                            return showCardSlider(e);
                         }).toList(),
                         options: CarouselOptions(
                             height: MediaQuery.of(context).size.height * 0.23,
@@ -89,6 +83,21 @@ class _CustomeSliderState extends State<CustomeSlider> {
                     ),
                 ],
             ),
+        );
+    }
+
+    FutureBuilder carouselSlideBuilder(String apiUrl) {
+        return FutureBuilder(
+            future: getMoviesApi(apiUrl),
+            builder: (BuildContext context, AsyncSnapshot asyncSnapshot) {
+                if (asyncSnapshot.hasData) {
+                    Movies movies = asyncSnapshot.data;
+
+                    return showCardSlider(movies);
+                }
+
+                return loadCardSlider();
+            },
         );
     }
 
@@ -150,7 +159,7 @@ class _CustomeSliderState extends State<CustomeSlider> {
                     poster : responseBody['Poster'],
                 );
 
-                return movies;
+                listMovies.add(movies);
             }
 
         } catch (e) {
