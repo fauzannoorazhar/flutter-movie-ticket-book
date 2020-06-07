@@ -86,21 +86,6 @@ class _CustomeSliderState extends State<CustomeSlider> {
         );
     }
 
-    FutureBuilder carouselSlideBuilder(String apiUrl) {
-        return FutureBuilder(
-            future: getMoviesApi(apiUrl),
-            builder: (BuildContext context, AsyncSnapshot asyncSnapshot) {
-                if (asyncSnapshot.hasData) {
-                    Movies movies = asyncSnapshot.data;
-
-                    return showCardSlider(movies);
-                }
-
-                return loadCardSlider();
-            },
-        );
-    }
-
     Widget showCardSlider(Movies movies) {
         return Container(
             width: MediaQuery.of(context).size.width,

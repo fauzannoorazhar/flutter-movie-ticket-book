@@ -20,7 +20,9 @@ class _MainPageState extends State<MainPage> {
     @override
     Widget build(BuildContext context) {
         return Scaffold(
+            backgroundColor: Colors.white,
             appBar: AppBar(
+                elevation: 0,
                 bottom: PreferredSize(
                     child: Container(color: Colors.white, height: 4.0), 
                     preferredSize: Size.fromHeight(4.0)
