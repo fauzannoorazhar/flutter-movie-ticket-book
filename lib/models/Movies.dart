@@ -17,6 +17,7 @@ class Movies {
     String imdbVotes;
     String imdbID;
     String type;
+    List<Rating> listRating;
 
     Movies({
         this.title,
@@ -37,6 +38,7 @@ class Movies {
         this.imdbVotes,
         this.imdbID,
         this.type,
+        this.listRating
     });
 
     factory Movies.fecthData(Map<String, dynamic> json) {
@@ -58,7 +60,28 @@ class Movies {
             imdbRating : json['imdbRating'],
             imdbVotes : json['imdbVotes'],
             imdbID : json['imdbID'],
-            type : json['Type'],  
+            type : json['Type'],
+        );
+    }
+
+    Rating getRating(int index) {
+        return listRating[index];
+    }
+}
+
+class Rating {
+    String source;
+    String value;
+
+    Rating({
+        this.source,
+        this.value
+    });
+
+    factory Rating.fecthData(Map<String, dynamic> json) {
+        return Rating(
+            source: json['Source'],
+            value: json['Value']
         );
     }
 }

@@ -7,6 +7,8 @@ import 'package:mf_movie_ticket_book/models/Movies.dart';
 import 'package:http/http.dart' as http;
 import 'dart:developer' as dev;
 
+import 'package:mf_movie_ticket_book/ui/views/movies_detail_page.dart';
+
 class CustomTabLine extends StatefulWidget {
     List<ListCategoryMovies> list;
 
@@ -146,34 +148,31 @@ class _CustomTabLineState extends State<CustomTabLine> {
     }
 
     Widget showCardMovies(Movies movies) {
-        return Container(
-            width: MediaQuery.of(context).size.width * 0.35,
-            margin: EdgeInsets.only(right: 20),
-            decoration: BoxDecoration(
-                image: DecorationImage(
-                    image: NetworkImage(movies.poster),
-                    fit: BoxFit.cover,
-                ),
-                gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [
-                        Colors.purple,
-                        Colors.deepPurpleAccent,
-                    ]
-                ),
-                borderRadius: BorderRadius.all(
-                    Radius.circular(10)
-                ),
-                boxShadow: [
-                    BoxShadow(
-                        color: Colors.grey.shade400,
-                        blurRadius: 2,
-                        spreadRadius: 0.0,
-                        offset: Offset(2.0, 2.0), // shadow direction: bottom right
-                    )
-                ],
-            ),               
+        return InkWell(
+            onTap: () {
+                return Navigator.push(context, MaterialPageRoute(builder: (_) => MoviesDetailPage(movies: movies)));
+            }, 
+            child: Container(
+                width: MediaQuery.of(context).size.width * 0.35,
+                margin: EdgeInsets.only(right: 20),
+                decoration: BoxDecoration(
+                    image: DecorationImage(
+                        image: NetworkImage(movies.poster),
+                        fit: BoxFit.cover,
+                    ),
+                    borderRadius: BorderRadius.all(
+                        Radius.circular(10)
+                    ),
+                    boxShadow: [
+                        BoxShadow(
+                            color: Colors.grey.shade400,
+                            blurRadius: 2,
+                            spreadRadius: 0.0,
+                            offset: Offset(2.0, 2.0), // shadow direction: bottom right
+                        )
+                    ],
+                ),               
+            )
         );
     }
 
@@ -231,6 +230,13 @@ class _CustomTabLineState extends State<CustomTabLine> {
             if (response.statusCode == 200) {
                 var responseBody = jsonDecode(response.body);
 
+                List<Rating> listRatings = new List<Rating>();
+
+                List listJson = responseBody['Ratings'];
+                listRatings = listJson.map((data) {
+                    return Rating.fecthData(data);
+                }).toList();
+
                 Movies movies = Movies(
                     title: responseBody['Title'],
                     year: responseBody['Year'],
@@ -250,6 +256,7 @@ class _CustomTabLineState extends State<CustomTabLine> {
                     imdbVotes : responseBody['imdbVotes'],
                     imdbID : responseBody['imdbID'],
                     type : responseBody['Type'],
+                    listRating: listRatings
                 );
 
                 return movies;
