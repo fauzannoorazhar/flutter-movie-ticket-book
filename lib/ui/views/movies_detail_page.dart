@@ -43,7 +43,7 @@ class _MoviesDetailPageState extends State<MoviesDetailPage> with SingleTickerPr
                                             decoration: BoxDecoration(
                                                 border: Border(
                                                     bottom: BorderSide(
-                                                        color: Colors.purple
+                                                        color: Colors.purple,
                                                     )
                                                 )
                                             ),
@@ -53,7 +53,7 @@ class _MoviesDetailPageState extends State<MoviesDetailPage> with SingleTickerPr
                                                 indicatorColor: Theme.of(context).primaryColor,
                                                 labelColor: Theme.of(context).primaryColor,
                                                 unselectedLabelColor: Colors.black,
-                                                indicatorWeight: 2,
+                                                indicatorWeight: 5,
                                                 tabs: [
                                                     Tab(
                                                         text: "Synopsis/Plot"
@@ -132,6 +132,24 @@ class _MoviesDetailPageState extends State<MoviesDetailPage> with SingleTickerPr
                         //     fit: BoxFit.cover
                         // ),
                         color: Colors.purple
+                    ),
+                    child: SafeArea(
+                        child: Container(
+                            margin: EdgeInsets.fromLTRB(15, 15, 15, 0),
+                            child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                    InkWell(
+                                        child: FaIcon(FontAwesomeIcons.arrowLeft),
+                                        onTap: () {
+                                            return Navigator.pop(context);
+                                        },
+                                    ),
+                                    FaIcon(FontAwesomeIcons.shareAlt),
+                                ],
+                            )
+                        ),
                     ),
                 ),
                 Positioned(
