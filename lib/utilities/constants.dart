@@ -1,1 +1,0 @@
-String apiUrl = 'http://www.omdbapi.com/';
