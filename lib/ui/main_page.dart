@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:mf_movie_ticket_book/models/ListCategoryMovies.dart';
 import 'package:mf_movie_ticket_book/models/ListMoviesApi.dart';
+import 'package:mf_movie_ticket_book/ui/views/movies_bloc_views.dart';
 import 'package:mf_movie_ticket_book/ui/widgets/custom_slider.dart';
 import 'package:mf_movie_ticket_book/ui/widgets/custom_tab_line.dart';
 
@@ -16,6 +17,7 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
     List<ListCategoryMovies> listCategory = new List<ListCategoryMovies>();
     List<ListMoviesApi> listMoviesSlider = new List<ListMoviesApi>();
+    int _indexTabs = 0;
 
     @override
     Widget build(BuildContext context) {
@@ -40,19 +42,14 @@ class _MainPageState extends State<MainPage> {
                     )
                 ],
             ),
-            body: SingleChildScrollView(
-                child: Column(
-                    children: [
-                        CustomeSlider(listMoviesApi: initListMoviesSlider()),
-                        CustomTabLine(list: initListCategoryMovies()),
-                    ],
-                )
-            ),
+            body: getBodyMainPage(),
             bottomNavigationBar: BottomNavigationBar(
                 onTap: (index) {
-                    
+                    setState(() {
+                        this._indexTabs = index;
+                    });
                 },
-                currentIndex: 0,
+                currentIndex: _indexTabs,
                 items: <BottomNavigationBarItem> [
                     BottomNavigationBarItem(
                         icon: FaIcon(FontAwesomeIcons.video),
@@ -67,7 +64,7 @@ class _MainPageState extends State<MainPage> {
                     BottomNavigationBarItem(
                         icon: FaIcon(FontAwesomeIcons.ticketAlt),
                         title: Text(
-                            'EVENTS',
+                            'BLOC',
                             style: TextStyle(
                                 fontSize: 15,
                                 fontWeight: FontWeight.bold
@@ -87,6 +84,23 @@ class _MainPageState extends State<MainPage> {
                 ],
             )
         );
+    }
+
+    Widget getBodyMainPage() {
+        if (this._indexTabs == 0) {
+            return SingleChildScrollView(
+                child: Column(
+                    children: [
+                        CustomeSlider(listMoviesApi: initListMoviesSlider()),
+                        CustomTabLine(list: initListCategoryMovies()),
+                    ],
+                )
+            );
+        }
+
+        if (this._indexTabs == 1) {
+            return MoviesBlocViews();
+        }
     }
 
     List<ListCategoryMovies> initListCategoryMovies() {
