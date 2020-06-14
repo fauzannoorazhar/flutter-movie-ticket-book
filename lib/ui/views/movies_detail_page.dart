@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:mf_movie_ticket_book/models/Movies.dart';
+import 'package:mf_movie_ticket_book/ui/views/movies_booking_page.dart';
 
 class MoviesDetailPage extends StatefulWidget {
     Movies movies;
@@ -105,7 +106,9 @@ class _MoviesDetailPageState extends State<MoviesDetailPage> with SingleTickerPr
                 )
             ),
             floatingActionButton: FloatingActionButton.extended(
-                onPressed: null, 
+                onPressed: () {
+                    return Navigator.push(context, MaterialPageRoute(builder: (_) => MoviesBookingPage(movies: widget.movies)));
+                }, 
                 label: Text(
                     'Buy Ticket',
                     style: TextStyle(
