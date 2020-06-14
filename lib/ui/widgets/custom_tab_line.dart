@@ -92,7 +92,7 @@ class _CustomTabLineState extends State<CustomTabLine> {
                         },
                         child: Container(
                             padding: (index == 0) ? EdgeInsets.only(top: 10, bottom: 10, right: 10) : EdgeInsets.all(10),
-                            child: Text(widget.list[index].nama),
+                            child: Text(widget.list[index].name),
                             decoration: BoxDecoration(
                                 border: Border(
                                     bottom: BorderSide(

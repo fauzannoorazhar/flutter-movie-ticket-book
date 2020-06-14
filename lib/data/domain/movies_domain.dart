@@ -10,3 +10,13 @@ class MoviesDomain {
         return moviesRepository.getPopularMovies();
     }
 }
+
+class MoviesDomainList {
+    final MoviesRepository moviesRepository;
+
+    MoviesDomainList(this.moviesRepository);
+
+    Future<List<Movies>> getListMovies() {
+        return moviesRepository.getListMoviesTabHomePage();
+    }
+}

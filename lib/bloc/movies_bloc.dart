@@ -28,3 +28,26 @@ class MoviesBloc extends Bloc<MoviesEvent, MoviesState> {
         }
     }
 }
+
+class MoviesListBloc extends Bloc<MoviesEventList, MoviesState> {
+    final MoviesDomainList moviesDomainList;
+
+    MoviesListBloc({this.moviesDomainList});
+
+    @override
+    MoviesState get initialState => MoviesFetchLoading();
+
+    @override
+    Stream<MoviesState> mapEventToState(MoviesEventList event) async* {
+        if (event is MoviesFetching) {
+            yield MoviesFetchLoading();
+
+            try {
+                List<Movies> listMovies = await moviesDomainList.getListMovies();
+                yield MoviesFetchSuccessList(lisMovies: listMovies);
+            } catch (e) {
+                yield MoviesFetchError(error: e.toString());
+            }
+        }
+    }
+}

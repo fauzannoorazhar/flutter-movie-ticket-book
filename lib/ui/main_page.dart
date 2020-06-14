@@ -4,8 +4,10 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:mf_movie_ticket_book/models/ListCategoryMovies.dart';
 import 'package:mf_movie_ticket_book/models/ListMoviesApi.dart';
 import 'package:mf_movie_ticket_book/ui/views/movies_bloc_views.dart';
+import 'package:mf_movie_ticket_book/ui/views/movies_home_page.dart';
 import 'package:mf_movie_ticket_book/ui/widgets/custom_slider.dart';
 import 'package:mf_movie_ticket_book/ui/widgets/custom_tab_line.dart';
+import 'package:mf_movie_ticket_book/utilities/constants.dart';
 
 class MainPage extends StatefulWidget {
     MainPage({Key key}) : super(key: key);
@@ -15,33 +17,11 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-    List<ListCategoryMovies> listCategory = new List<ListCategoryMovies>();
-    List<ListMoviesApi> listMoviesSlider = new List<ListMoviesApi>();
     int _indexTabs = 0;
 
     @override
     Widget build(BuildContext context) {
         return Scaffold(
-            backgroundColor: Colors.white,
-            appBar: AppBar(
-                elevation: 0,
-                bottom: PreferredSize(
-                    child: Container(color: Colors.white, height: 4.0), 
-                    preferredSize: Size.fromHeight(4.0)
-                ),
-                backgroundColor: Colors.white,
-                title: Text('Movies', style: TextStyle(color: Colors.purple)),
-                centerTitle: true,
-                actions: [
-                    Padding(
-                        padding: EdgeInsets.all(15),
-                        child: FaIcon(
-                            FontAwesomeIcons.bell,
-                            color: Colors.purple,
-                        )
-                    )
-                ],
-            ),
             body: getBodyMainPage(),
             bottomNavigationBar: BottomNavigationBar(
                 onTap: (index) {
@@ -86,42 +66,13 @@ class _MainPageState extends State<MainPage> {
         );
     }
 
-    Widget getBodyMainPage() {
+    getBodyMainPage() {
         if (this._indexTabs == 0) {
-            return SingleChildScrollView(
-                child: Column(
-                    children: [
-                        CustomeSlider(listMoviesApi: initListMoviesSlider()),
-                        CustomTabLine(list: initListCategoryMovies()),
-                    ],
-                )
-            );
+            return MoviesHomePage();
         }
 
         if (this._indexTabs == 1) {
             return MoviesBlocViews();
         }
-    }
-
-    List<ListCategoryMovies> initListCategoryMovies() {
-        if (listCategory.isEmpty) {
-            listCategory.add(ListCategoryMovies(nama: 'Marvel Cinematic Universe', active: true));
-            listCategory.add(ListCategoryMovies(nama: 'DC Extended Universe', active: false));
-            listCategory.add(ListCategoryMovies(nama: 'Adventure/Fantasy', active: false));
-        }
-
-        return listCategory;
-    }
-
-    List<ListMoviesApi> initListMoviesSlider() {
-        if (listMoviesSlider.isEmpty) {
-            listMoviesSlider.add(ListMoviesApi(id: 'tt3480822', apiUrl: 'http://www.omdbapi.com/?i=tt3480822&apikey=84f704f1'));
-            listMoviesSlider.add(ListMoviesApi(id: 'tt9032400', apiUrl: 'http://www.omdbapi.com/?i=tt9032400&apikey=84f704f1'));
-            listMoviesSlider.add(ListMoviesApi(id: 'tt9376612', apiUrl: 'http://www.omdbapi.com/?i=tt9376612&apikey=84f704f1'));
-            listMoviesSlider.add(ListMoviesApi(id: 'tt10648342', apiUrl: 'http://www.omdbapi.com/?i=tt10648342&apikey=84f704f1'));
-            listMoviesSlider.add(ListMoviesApi(id: 'tt9419884', apiUrl: 'http://www.omdbapi.com/?i=tt9419884&apikey=84f704f1'));
-        }
-
-        return listMoviesSlider;
     }
 }

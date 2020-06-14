@@ -19,6 +19,15 @@ class MoviesFetchSuccess extends MoviesState {
     List<Object> get props => [];
 }
 
+class MoviesFetchSuccessList extends MoviesState {
+    final List<Movies> lisMovies;
+
+    const MoviesFetchSuccessList({this.lisMovies});
+
+    @override
+    List<Object> get props => [];
+}
+
 class MoviesFetchError extends MoviesState {
     final String error;
 
