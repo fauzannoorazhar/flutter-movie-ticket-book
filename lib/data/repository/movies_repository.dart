@@ -49,4 +49,25 @@ class MoviesListRepository {
             return e;
         }
     }
+    
+    Future<List<Movies>> getListMoviesHomeSlider() async {
+        try {
+            final response = await Future.wait([
+                dio.get(apiUrl + '?i=tt3480822&apikey=' + apiKey),
+                dio.get(apiUrl + '?i=tt9032400&apikey=' + apiKey),
+                dio.get(apiUrl + '?i=tt9376612&apikey=' + apiKey),
+                dio.get(apiUrl + '?i=tt10648342&apikey=' + apiKey),
+                dio.get(apiUrl + '?i=tt9419884&apikey=' + apiKey),
+            ]);
+
+            List<Movies> list = new List<Movies>();
+            response.toList().forEach((element) {
+                list.add(Movies.fecthData(element.data));
+            });
+
+            return list;
+        } catch (e) {
+            return e;
+        }
+    }
 }

@@ -7,10 +7,8 @@ import 'package:mf_movie_ticket_book/bloc/movies/movies_state.dart';
 import 'package:mf_movie_ticket_book/data/domain/movies_domain.dart';
 import 'package:mf_movie_ticket_book/data/repository/movies_repository.dart';
 import 'package:mf_movie_ticket_book/models/ListCategoryMovies.dart';
-import 'package:mf_movie_ticket_book/models/ListMoviesApi.dart';
-import 'package:mf_movie_ticket_book/ui/widgets/custom_slider.dart';
+import 'package:mf_movie_ticket_book/ui/widgets/slider_movies.dart';
 import 'package:mf_movie_ticket_book/ui/widgets/tab_movies.dart';
-import 'package:mf_movie_ticket_book/utilities/constants.dart';
 
 class MoviesHomePage extends StatefulWidget {
     @override
@@ -18,23 +16,26 @@ class MoviesHomePage extends StatefulWidget {
 }
 
 class _MoviesHomePageState extends State<MoviesHomePage> {
-    MoviesListBloc _moviesListBloc;
+    MoviesListBloc _moviesListBlocTab;
+    MoviesListBloc _moviesListBlocSlider;
     MoviesListDomain _moviesListDomain;
 
     List<ListCategoryMovies> listCategoryMovies = new List<ListCategoryMovies>();
-    List<ListMoviesApi> listMoviesSlider = new List<ListMoviesApi>();
 
     @override
     void initState() { 
         super.initState();
         _moviesListDomain = new MoviesListDomain(MoviesListRepository());
-        _moviesListBloc = new MoviesListBloc(
+        _moviesListBlocTab = new MoviesListBloc(
             moviesListDomain: _moviesListDomain,
             futureMethod: _moviesListDomain.getListMoviesTabHomePage()
         );
+        _moviesListBlocSlider = new MoviesListBloc(
+            moviesListDomain: _moviesListDomain,
+            futureMethod: _moviesListDomain.getListMoviesHomeSlider()
+        );
 
         initListCategoryMovies();
-        initListMoviesApi();
     }
 
     void initListCategoryMovies() {
@@ -47,21 +48,10 @@ class _MoviesHomePageState extends State<MoviesHomePage> {
         }
     }
 
-    void initListMoviesApi() {
-        if (listMoviesSlider.isEmpty) {
-            setState(() {
-                listMoviesSlider.add(ListMoviesApi(id: 'tt3480822', apiUrl: apiUrl + '?i=tt3480822&apikey=' + apiKey));
-                listMoviesSlider.add(ListMoviesApi(id: 'tt9032400', apiUrl: apiUrl + '?i=tt9032400&apikey=' + apiKey));
-                listMoviesSlider.add(ListMoviesApi(id: 'tt9376612', apiUrl: apiUrl + '?i=tt9376612&apikey=' + apiKey));
-                listMoviesSlider.add(ListMoviesApi(id: 'tt10648342', apiUrl: apiUrl + '?i=tt10648342&apikey=' + apiKey));
-                listMoviesSlider.add(ListMoviesApi(id: 'tt9419884', apiUrl: apiUrl + '?i=tt9419884&apikey=' + apiKey));
-            });
-        }
-    }
-
     @override
     Widget build(BuildContext context) {
-        _moviesListBloc.add(MoviesListFetching());
+        _moviesListBlocTab.add(MoviesListFetching());
+        _moviesListBlocSlider.add(MoviesListFetching());
 
         return Scaffold(
             backgroundColor: Colors.white,
@@ -87,43 +77,77 @@ class _MoviesHomePageState extends State<MoviesHomePage> {
             body: SingleChildScrollView(
                 child: Column(
                     children: [
-                        CustomeSlider(listMoviesApi: listMoviesSlider),
-                        BlocProvider(
-                            create: (BuildContext context) {
-                                return _moviesListBloc;
-                            },
-                            child: BlocListener<MoviesListBloc, MoviesListState> (
-                                bloc: _moviesListBloc,
-                                listener: (BuildContext context, MoviesListState state) {
-                                    if (state is MoviesFetchErrorList) {
-                                        print(state.error.toString());
-                                        Scaffold.of(context).showSnackBar(
-                                            SnackBar(
-                                                content: Text('${state.error}'),
-                                                backgroundColor: Colors.red,
-                                            ),
-                                        );
-                                    }
-                                },
-                                child: BlocBuilder<MoviesListBloc, MoviesListState>(
-                                    bloc: _moviesListBloc,
-                                    builder: (BuildContext buildContext, MoviesListState state) {
-                                        if (state is MoviesFetchSuccessList) {
-                                            return TabMovies(
-                                                listCategoryMovies: this.listCategoryMovies,
-                                                listMovies: state.lisMovies,
-                                            );
-                                        } else {
-                                            return Center(
-                                                child: CircularProgressIndicator(),
-                                            );
-                                        }
-                                    },
-                                ),
-                            ),
-                        )
+                        blocSliderMovies(),
+                        blocTabMovies(),
                     ],
                 )
+            ),
+        );
+    }
+
+    Widget blocSliderMovies() {
+        return BlocProvider(
+            create: (BuildContext context) {
+                return _moviesListBlocSlider;
+            },
+            child: BlocListener<MoviesListBloc, MoviesListState> (
+                bloc: _moviesListBlocSlider,
+                listener: (BuildContext context, MoviesListState state) {
+                    if (state is MoviesFetchErrorList) {
+                        Scaffold.of(context).showSnackBar(
+                            SnackBar(
+                                content: Text('${state.error}'),
+                                backgroundColor: Colors.red,
+                            ),
+                        );
+                    }
+                },
+                child: BlocBuilder<MoviesListBloc, MoviesListState>(
+                    bloc: _moviesListBlocSlider,
+                    builder: (BuildContext context, MoviesListState state) {
+                        if (state is MoviesFetchSuccessList) {
+                            return SliderMovies(listMovies: state.lisMovies);
+                        } else {
+                            return SliderMoviesLoad();
+                        }
+                    },
+                ),
+            ),
+        );
+    }
+
+    Widget blocTabMovies() {
+        return BlocProvider(
+            create: (BuildContext context) {
+                return _moviesListBlocTab;
+            },
+            child: BlocListener<MoviesListBloc, MoviesListState> (
+                bloc: _moviesListBlocTab,
+                listener: (BuildContext context, MoviesListState state) {
+                    if (state is MoviesFetchErrorList) {
+                        Scaffold.of(context).showSnackBar(
+                            SnackBar(
+                                content: Text('${state.error}'),
+                                backgroundColor: Colors.red,
+                            ),
+                        );
+                    }
+                },
+                child: BlocBuilder<MoviesListBloc, MoviesListState>(
+                    bloc: _moviesListBlocTab,
+                    builder: (BuildContext buildContext, MoviesListState state) {
+                        if (state is MoviesFetchSuccessList) {
+                            return TabMovies(
+                                listCategoryMovies: this.listCategoryMovies,
+                                listMovies: state.lisMovies,
+                            );
+                        } else {
+                            return Center(
+                                child: CircularProgressIndicator(),
+                            );
+                        }
+                    },
+                ),
             ),
         );
     }

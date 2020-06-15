@@ -19,4 +19,8 @@ class MoviesListDomain {
     Future<List<Movies>> getListMoviesTabHomePage() {
         return moviesListRepository.getListMoviesTabHomePage();
     }
+
+    Future<List<Movies>> getListMoviesHomeSlider() {
+        return moviesListRepository.getListMoviesHomeSlider();
+    }
 }
