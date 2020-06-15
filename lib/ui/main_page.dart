@@ -1,13 +1,7 @@
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:mf_movie_ticket_book/models/ListCategoryMovies.dart';
-import 'package:mf_movie_ticket_book/models/ListMoviesApi.dart';
 import 'package:mf_movie_ticket_book/ui/views/movies_bloc_views.dart';
 import 'package:mf_movie_ticket_book/ui/views/movies_home_page.dart';
-import 'package:mf_movie_ticket_book/ui/widgets/custom_slider.dart';
-import 'package:mf_movie_ticket_book/ui/widgets/custom_tab_line.dart';
-import 'package:mf_movie_ticket_book/utilities/constants.dart';
 
 class MainPage extends StatefulWidget {
     MainPage({Key key}) : super(key: key);

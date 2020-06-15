@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:mf_movie_ticket_book/bloc/movies_bloc.dart';
-import 'package:mf_movie_ticket_book/bloc/movies_event.dart';
-import 'package:mf_movie_ticket_book/bloc/movies_state.dart';
+import 'package:mf_movie_ticket_book/bloc/movies/movies_bloc.dart';
+import 'package:mf_movie_ticket_book/bloc/movies/movies_event.dart';
+import 'package:mf_movie_ticket_book/bloc/movies/movies_state.dart';
 import 'package:mf_movie_ticket_book/data/domain/movies_domain.dart';
 import 'package:mf_movie_ticket_book/data/repository/movies_repository.dart';
 import 'package:mf_movie_ticket_book/models/ListCategoryMovies.dart';
 import 'package:mf_movie_ticket_book/models/ListMoviesApi.dart';
 import 'package:mf_movie_ticket_book/ui/widgets/custom_slider.dart';
-import 'package:mf_movie_ticket_book/ui/widgets/custom_tab_line.dart';
+import 'package:mf_movie_ticket_book/ui/widgets/tab_movies.dart';
 import 'package:mf_movie_ticket_book/utilities/constants.dart';
 
 class MoviesHomePage extends StatefulWidget {
@@ -19,17 +19,19 @@ class MoviesHomePage extends StatefulWidget {
 
 class _MoviesHomePageState extends State<MoviesHomePage> {
     MoviesListBloc _moviesListBloc;
-    MoviesDomainList _moviesDomainList;
+    MoviesListDomain _moviesListDomain;
 
     List<ListCategoryMovies> listCategoryMovies = new List<ListCategoryMovies>();
     List<ListMoviesApi> listMoviesSlider = new List<ListMoviesApi>();
-    int _indexTabs = 0;
 
     @override
     void initState() { 
         super.initState();
-        _moviesDomainList = new MoviesDomainList(MoviesRepository());
-        _moviesListBloc = new MoviesListBloc(moviesDomainList: _moviesDomainList);
+        _moviesListDomain = new MoviesListDomain(MoviesListRepository());
+        _moviesListBloc = new MoviesListBloc(
+            moviesListDomain: _moviesListDomain,
+            futureMethod: _moviesListDomain.getListMoviesTabHomePage()
+        );
 
         initListCategoryMovies();
         initListMoviesApi();
@@ -59,7 +61,7 @@ class _MoviesHomePageState extends State<MoviesHomePage> {
 
     @override
     Widget build(BuildContext context) {
-        _moviesListBloc.add(MoviesFetchingList());
+        _moviesListBloc.add(MoviesListFetching());
 
         return Scaffold(
             backgroundColor: Colors.white,
@@ -86,44 +88,43 @@ class _MoviesHomePageState extends State<MoviesHomePage> {
                 child: Column(
                     children: [
                         CustomeSlider(listMoviesApi: listMoviesSlider),
-                        CustomTabLine(list: listCategoryMovies),
+                        BlocProvider(
+                            create: (BuildContext context) {
+                                return _moviesListBloc;
+                            },
+                            child: BlocListener<MoviesListBloc, MoviesListState> (
+                                bloc: _moviesListBloc,
+                                listener: (BuildContext context, MoviesListState state) {
+                                    if (state is MoviesFetchErrorList) {
+                                        print(state.error.toString());
+                                        Scaffold.of(context).showSnackBar(
+                                            SnackBar(
+                                                content: Text('${state.error}'),
+                                                backgroundColor: Colors.red,
+                                            ),
+                                        );
+                                    }
+                                },
+                                child: BlocBuilder<MoviesListBloc, MoviesListState>(
+                                    bloc: _moviesListBloc,
+                                    builder: (BuildContext buildContext, MoviesListState state) {
+                                        if (state is MoviesFetchSuccessList) {
+                                            return TabMovies(
+                                                listCategoryMovies: this.listCategoryMovies,
+                                                listMovies: state.lisMovies,
+                                            );
+                                        } else {
+                                            return Center(
+                                                child: CircularProgressIndicator(),
+                                            );
+                                        }
+                                    },
+                                ),
+                            ),
+                        )
                     ],
                 )
             ),
-            // body: BlocProvider(
-            //     create: (BuildContext context) {
-            //         return _moviesListBloc;
-            //     },
-            //     child: BlocListener<MoviesListBloc, MoviesState> (
-            //         bloc: _moviesListBloc,
-            //         listener: (BuildContext context, MoviesState state) {
-            //             if (state is MoviesFetchError) {
-            //                 print(state.error.toString());
-            //                 Scaffold.of(context).showSnackBar(
-            //                     SnackBar(
-            //                         content: Text('${state.error}'),
-            //                         backgroundColor: Colors.red,
-            //                     ),
-            //                 );
-            //             }
-            //         },
-            //         child: BlocBuilder<MoviesListBloc, MoviesState>(
-            //             bloc: _moviesListBloc,
-            //             builder: (BuildContext buildContext, MoviesState state) {
-            //                 if (state is MoviesFetchSuccessList) {
-            //                     print(state.lisMovies.toString());
-            //                     return Center(
-            //                         child: Text('fauzan'),
-            //                     );
-            //                 } else {
-            //                     return Center(
-            //                         child: CircularProgressIndicator(),
-            //                     );
-            //                 }
-            //             },
-            //         ),
-            //     ),
-            // ),
         );
     }
 }

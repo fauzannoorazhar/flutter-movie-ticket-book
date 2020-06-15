@@ -4,9 +4,11 @@ import 'package:mf_movie_ticket_book/ui/views/movies_detail_page.dart';
 
 class CardMovies extends StatelessWidget {
     Movies movies;
+    MaterialPageRoute materialPageRoute;
 
     CardMovies({
-        @required this.movies
+        @required this.movies,
+        this.materialPageRoute,
     });
 
     @override
@@ -16,32 +18,27 @@ class CardMovies extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
                 Expanded(
-                    child: InkWell(
-                        onTap: () {
-                            //return Navigator.push(context, MaterialPageRoute(builder: (_) => MoviesDetailPage(movies: movies)));
-                        },
-                        child: Container(
-                            width: MediaQuery.of(context).size.width * 0.35,
-                            margin: EdgeInsets.only(right: 20),
-                            decoration: BoxDecoration(
-                                image: DecorationImage(
-                                    image: NetworkImage(this.movies.poster),
-                                    fit: BoxFit.cover,
-                                ),
-                                borderRadius: BorderRadius.all(
-                                    Radius.circular(10)
-                                ),
-                                boxShadow: [
-                                    BoxShadow(
-                                        color: Colors.grey.shade400,
-                                        blurRadius: 2,
-                                        spreadRadius: 0.0,
-                                        offset: Offset(2.0, 2.0), // shadow direction: bottom right
-                                    )
-                                ],
-                            ),               
-                        )
-                    ),
+                    child: Container(
+                        width: MediaQuery.of(context).size.width * 0.35,
+                        margin: EdgeInsets.only(right: 20),
+                        decoration: BoxDecoration(
+                            image: DecorationImage(
+                                image: NetworkImage(this.movies.poster),
+                                fit: BoxFit.cover,
+                            ),
+                            borderRadius: BorderRadius.all(
+                                Radius.circular(10)
+                            ),
+                            boxShadow: [
+                                BoxShadow(
+                                    color: Colors.grey.shade400,
+                                    blurRadius: 2,
+                                    spreadRadius: 0.0,
+                                    offset: Offset(2.0, 2.0), // shadow direction: bottom right
+                                )
+                            ],
+                        ),               
+                    )
                 ),
                 Container(
                     width: MediaQuery.of(context).size.width * 0.35,

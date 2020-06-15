@@ -11,12 +11,12 @@ class MoviesDomain {
     }
 }
 
-class MoviesDomainList {
-    final MoviesRepository moviesRepository;
+class MoviesListDomain {
+    final MoviesListRepository moviesListRepository;
 
-    MoviesDomainList(this.moviesRepository);
+    MoviesListDomain(this.moviesListRepository);
 
-    Future<List<Movies>> getListMovies() {
-        return moviesRepository.getListMoviesTabHomePage();
+    Future<List<Movies>> getListMoviesTabHomePage() {
+        return moviesListRepository.getListMoviesTabHomePage();
     }
 }

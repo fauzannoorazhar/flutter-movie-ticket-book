@@ -9,11 +9,11 @@ abstract class MoviesEvent extends Equatable {
 
 class MoviesFetching extends MoviesEvent {}
 
-abstract class MoviesEventList extends Equatable {
-    const MoviesEventList();
+abstract class MoviesListEvent extends Equatable {
+    const MoviesListEvent();
 
     @override
     List<Object> get props => [];
 }
 
-class MoviesFetchingList extends MoviesEventList {}
+class MoviesListFetching extends MoviesListEvent {}

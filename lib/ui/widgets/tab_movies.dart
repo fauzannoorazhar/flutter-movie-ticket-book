@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mf_movie_ticket_book/models/ListCategoryMovies.dart';
 import 'package:mf_movie_ticket_book/models/Movies.dart';
+import 'package:mf_movie_ticket_book/ui/views/movies_bloc_views.dart';
+import 'package:mf_movie_ticket_book/ui/views/movies_detail_page.dart';
 import 'package:mf_movie_ticket_book/ui/widgets/card_movies.dart';
 
 class TabMovies extends StatefulWidget {
@@ -84,7 +86,13 @@ class _TabMoviesState extends State<TabMovies> {
                 itemBuilder: (BuildContext context, int index) {
                     Movies movies = this.widget.listMovies[index];
 
-                    return CardMovies(movies: movies);
+                    return InkWell(
+                        onTap: () {
+                            return Navigator.push(
+                                context, MaterialPageRoute(builder: (_) => MoviesDetailPage(movies: movies)));
+                        },
+                        child: CardMovies(movies: movies),
+                    );
                 },
             )
         );

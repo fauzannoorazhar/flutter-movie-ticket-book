@@ -1,10 +1,8 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mf_movie_ticket_book/bloc/movies_event.dart';
-import 'package:mf_movie_ticket_book/bloc/movies_state.dart';
+import 'package:mf_movie_ticket_book/bloc/movies/movies_event.dart';
+import 'package:mf_movie_ticket_book/bloc/movies/movies_state.dart';
 import 'package:mf_movie_ticket_book/data/domain/movies_domain.dart';
 import 'package:mf_movie_ticket_book/models/Movies.dart';
-import 'package:mf_movie_ticket_book/ui/views/movies_booking_page.dart';
 
 class MoviesBloc extends Bloc<MoviesEvent, MoviesState> {
     final MoviesDomain moviesDomain;
@@ -29,24 +27,28 @@ class MoviesBloc extends Bloc<MoviesEvent, MoviesState> {
     }
 }
 
-class MoviesListBloc extends Bloc<MoviesEventList, MoviesState> {
-    final MoviesDomainList moviesDomainList;
+class MoviesListBloc extends Bloc<MoviesListEvent, MoviesListState> {
+    final MoviesListDomain moviesListDomain;
+    final Future futureMethod; 
 
-    MoviesListBloc({this.moviesDomainList});
+    MoviesListBloc({
+        this.moviesListDomain,
+        this.futureMethod
+    });
 
     @override
-    MoviesState get initialState => MoviesFetchLoading();
+    MoviesListState get initialState => MoviesFetchLoadingList();
 
     @override
-    Stream<MoviesState> mapEventToState(MoviesEventList event) async* {
-        if (event is MoviesFetching) {
-            yield MoviesFetchLoading();
+    Stream<MoviesListState> mapEventToState(MoviesListEvent event) async* {
+        if (event is MoviesListFetching) {
+            yield MoviesFetchLoadingList();
 
             try {
-                List<Movies> listMovies = await moviesDomainList.getListMovies();
+                List<Movies> listMovies = await this.futureMethod;
                 yield MoviesFetchSuccessList(lisMovies: listMovies);
             } catch (e) {
-                yield MoviesFetchError(error: e.toString());
+                yield MoviesFetchErrorList(error: e.toString());
             }
         }
     }

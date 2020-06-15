@@ -19,7 +19,26 @@ class MoviesFetchSuccess extends MoviesState {
     List<Object> get props => [];
 }
 
-class MoviesFetchSuccessList extends MoviesState {
+class MoviesFetchError extends MoviesState {
+    final String error;
+
+    const MoviesFetchError({this.error});
+
+    @override
+    List<Object> get props => [];
+
+    @override
+    @override
+    String toString() {
+        return 'Failure {error : $error }';
+    }
+}
+
+abstract class MoviesListState extends Equatable {
+    const MoviesListState();
+}
+
+class MoviesFetchSuccessList extends MoviesListState {
     final List<Movies> lisMovies;
 
     const MoviesFetchSuccessList({this.lisMovies});
@@ -28,10 +47,15 @@ class MoviesFetchSuccessList extends MoviesState {
     List<Object> get props => [];
 }
 
-class MoviesFetchError extends MoviesState {
+class MoviesFetchLoadingList extends MoviesListState {
+    @override
+    List<Object> get props => [];
+}
+
+class MoviesFetchErrorList extends MoviesListState {
     final String error;
 
-    const MoviesFetchError({this.error});
+    const MoviesFetchErrorList({this.error});
 
     @override
     List<Object> get props => [];

@@ -46,6 +46,12 @@ class Movies {
     });
 
     factory Movies.fecthData(Map<String, dynamic> json) {
+        List<Rating> listRatings = new List<Rating>();
+        List listJsonRating = json['Ratings'];
+        listRatings = listJsonRating.map((data) {
+            return Rating.fecthData(data);
+        }).toList();
+
         return Movies(
             title : json['Title'],
             year : json['Year'],
@@ -65,6 +71,7 @@ class Movies {
             imdbVotes : json['imdbVotes'],
             imdbID : json['imdbID'],
             type : json['Type'],
+            listRating: listRatings
         );
     }
 
