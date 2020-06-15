@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:mf_movie_ticket_book/models/Movies.dart';
-import 'package:mf_movie_ticket_book/ui/views/movies_detail_page.dart';
 
 class CardMovies extends StatelessWidget {
-    Movies movies;
-    MaterialPageRoute materialPageRoute;
+    final Movies movies;
 
     CardMovies({
         @required this.movies,
-        this.materialPageRoute,
     });
 
     @override

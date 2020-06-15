@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:mf_movie_ticket_book/models/ListCategoryMovies.dart';
 import 'package:mf_movie_ticket_book/models/Movies.dart';
-import 'package:mf_movie_ticket_book/ui/views/movies_bloc_views.dart';
 import 'package:mf_movie_ticket_book/ui/views/movies_detail_page.dart';
 import 'package:mf_movie_ticket_book/ui/widgets/card_movies.dart';
 
 class TabMovies extends StatefulWidget {
-    List<ListCategoryMovies> listCategoryMovies;
-    List<Movies> listMovies;
-    int indexCategoryActive;
+    final List<ListCategoryMovies> listCategoryMovies;
+    final List<Movies> listMovies;
+    final int indexCategoryActive;
 
     TabMovies({
         @required this.listCategoryMovies,

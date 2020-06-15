@@ -1,6 +1,5 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:mf_movie_ticket_book/models/ListCategoryMovies.dart';
 import 'package:mf_movie_ticket_book/models/Movies.dart';
 
 class SliderMovies extends StatefulWidget {
