@@ -4,18 +4,17 @@ import 'package:mf_movie_ticket_book/models/Movies.dart';
 import 'package:mf_movie_ticket_book/ui/views/movies_booking_page.dart';
 
 class MoviesDetailPage extends StatefulWidget {
-    Movies movies;
+    final Movies movies;
+    
     MoviesDetailPage({
-        this.movies,
-        Key key
-    }) : super(key: key);
+        @required this.movies,
+    });
 
     @override
     _MoviesDetailPageState createState() => _MoviesDetailPageState();
 }
 
-class _MoviesDetailPageState extends State<MoviesDetailPage> with SingleTickerProviderStateMixin {
-
+class _MoviesDetailPageState extends State<MoviesDetailPage> with TickerProviderStateMixin {
     TabController _controller;
 
     @override
@@ -159,7 +158,7 @@ class _MoviesDetailPageState extends State<MoviesDetailPage> with SingleTickerPr
                     top: 100,
                     child: Container(
                         width: MediaQuery.of(context).size.width,
-                        height: 230,
+                        height: MediaQuery.of(context).size.height * 0.28,
                         child: Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [

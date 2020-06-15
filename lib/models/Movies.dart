@@ -19,6 +19,9 @@ class Movies {
     String type;
     List<Rating> listRating;
 
+    // categoryMovies for home_page tab
+    String categoryName;
+
     Movies({
         this.title,
         this.year,
@@ -38,10 +41,17 @@ class Movies {
         this.imdbVotes,
         this.imdbID,
         this.type,
-        this.listRating
+        this.listRating,
+        this.categoryName
     });
 
     factory Movies.fecthData(Map<String, dynamic> json) {
+        List<Rating> listRatings = new List<Rating>();
+        List listJsonRating = json['Ratings'];
+        listRatings = listJsonRating.map((data) {
+            return Rating.fecthData(data);
+        }).toList();
+
         return Movies(
             title : json['Title'],
             year : json['Year'],
@@ -61,6 +71,7 @@ class Movies {
             imdbVotes : json['imdbVotes'],
             imdbID : json['imdbID'],
             type : json['Type'],
+            listRating: listRatings
         );
     }
 

@@ -1,51 +1,29 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:mf_movie_ticket_book/models/ListMoviesApi.dart';
 import 'package:mf_movie_ticket_book/models/Movies.dart';
-import 'dart:convert';
-import 'package:http/http.dart' as http;
 
-class CustomeSlider extends StatefulWidget {
-    List<ListMoviesApi> listMoviesApi;
-
-    CustomeSlider({
-        this.listMoviesApi,
-        Key key
-    }) : super(key: key);
+class SliderMovies extends StatefulWidget {
+    final List<Movies> listMovies;
+    SliderMovies({
+        @required this.listMovies,
+    });
 
     @override
-    _CustomeSliderState createState() => _CustomeSliderState();
+    _SliderMoviesState createState() => _SliderMoviesState();
 }
 
-class _CustomeSliderState extends State<CustomeSlider> {
+class _SliderMoviesState extends State<SliderMovies> {
     int _currentSlideIndex = 0;
-    List<Movies> listMovies = new List<Movies>();
 
     @override
     Widget build(BuildContext context) {
-        return carouselSlider();
-    }
-
-    void loadListMovies() async {
-        if (widget.listMoviesApi.isNotEmpty && listMovies.isEmpty) {
-            widget.listMoviesApi.forEach((moviesApi) { 
-                this.getMoviesApi(moviesApi.apiUrl);
-            });
-        }
-    }
-
-    Widget carouselSlider() {
-        loadListMovies();
-
         return Container(
             height: MediaQuery.of(context).size.height * 0.273,
             child: Column(
                 children: [
                     CarouselSlider(
-                        items: (listMovies.isEmpty) ? widget.listMoviesApi.map((e)  {
-                            return loadCardSlider();
-                        }).toList() : listMovies.map((e)  {
-                            return showCardSlider(e);
+                        items: this.widget.listMovies.map((movies)  {
+                            return showCardSlider(movies);
                         }).toList(),
                         options: CarouselOptions(
                             height: MediaQuery.of(context).size.height * 0.23,
@@ -66,8 +44,8 @@ class _CustomeSliderState extends State<CustomeSlider> {
                     SizedBox(height: 5),
                     Row(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        children: widget.listMoviesApi.map((url) {
-                            int index = widget.listMoviesApi.indexOf(url);
+                        children: this.widget.listMovies.map((url) {
+                            int index = widget.listMovies.indexOf(url);
                             return Container(
                                 width: 8.0,
                                 height: 8.0,
@@ -101,8 +79,37 @@ class _CustomeSliderState extends State<CustomeSlider> {
             ),
         );
     }
+}
 
-    Widget loadCardSlider() {
+class SliderMoviesLoad extends StatelessWidget {
+    @override
+    Widget build(BuildContext context) {
+        return Container(
+            height: MediaQuery.of(context).size.height * 0.273,
+            child: Column(
+                children: [
+                    CarouselSlider(
+                        items: [
+                            loadCardSlider(context),
+                            loadCardSlider(context),
+                        ],
+                        options: CarouselOptions(
+                            height: MediaQuery.of(context).size.height * 0.23,
+                            enableInfiniteScroll: true,
+                            aspectRatio: 16/9,
+                            autoPlay: true,
+                            autoPlayInterval: Duration(seconds: 3),
+                            autoPlayAnimationDuration: Duration(milliseconds: 800),
+                            autoPlayCurve: Curves.fastOutSlowIn,
+                            scrollDirection: Axis.horizontal,
+                        ),
+                    ),
+                ],
+            ),
+        );
+    }
+
+    Widget loadCardSlider(BuildContext context) {
         return Container(
             width: MediaQuery.of(context).size.width,
             margin: EdgeInsets.only(left: 6, right: 6, top: 10),
@@ -124,31 +131,5 @@ class _CustomeSliderState extends State<CustomeSlider> {
                 valueColor: AlwaysStoppedAnimation<Color>(Colors.white60),
             )
         );
-    }
-
-    getMoviesApi(String apiUrl) async {
-        try {
-            StringBuffer stringBuffer = new StringBuffer();
-            stringBuffer.write(apiUrl);
-            String url = stringBuffer.toString();
-
-            var response = await http.get(url);
-
-            if (response.statusCode == 200) {
-                var responseBody = jsonDecode(response.body);
-
-                Movies movies = Movies(
-                    title: responseBody['Title'],
-                    year: responseBody['Year'],
-                    released : responseBody['Released'],
-                    poster : responseBody['Poster'],
-                );
-
-                listMovies.add(movies);
-            }
-
-        } catch (e) {
-            print(e.toString());
-        } 
     }
 }

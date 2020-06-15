@@ -3,11 +3,11 @@ class ListCategoryMovies {
     static const dc = 1;
     static const adventureFantasy = 2;
 
-    String nama;
+    String name;
     bool active;
 
     ListCategoryMovies({
-        this.nama,
+        this.name,
         this.active
     });
 }
