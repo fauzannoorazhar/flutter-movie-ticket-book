@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:mf_movie_ticket_book/models/BookingHour.dart';
 import 'package:mf_movie_ticket_book/models/CinemaLocation.dart';
-import 'package:mf_movie_ticket_book/models/ListDateTime.dart';
+import 'package:mf_movie_ticket_book/models/DateTimeBooking.dart';
 import 'package:mf_movie_ticket_book/models/Movies.dart';
+import 'package:mf_movie_ticket_book/ui/widgets/button_selected_date.dart';
+import 'package:mf_movie_ticket_book/ui/widgets/button_selected_time.dart';
+import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 class MoviesBookingPage extends StatefulWidget {
-    Movies movies;
+    final Movies movies;
     
     MoviesBookingPage({
         this.movies
@@ -16,12 +19,7 @@ class MoviesBookingPage extends StatefulWidget {
 }
 
 class _MoviesBookingPageState extends State<MoviesBookingPage> {
-    var textButtonColor = Colors.black;
-    var buttonSelect = false;
-    var colorButton = Colors.white;
-    DateTime selectDateBooking;
-
-    List<ListDateTime> listDateTime = new List<ListDateTime>();
+    List<DateTimeBooking> listDateTimeBooking = new List<DateTimeBooking>();
     List<CinemaLocation> listCinemaLocation = new List<CinemaLocation>();
     List<BookingHour> listBookingHour = new List<BookingHour>();
 
@@ -29,7 +27,7 @@ class _MoviesBookingPageState extends State<MoviesBookingPage> {
     void initState() {
     // TODO: implement initState
         super.initState();
-        setListDateTime();
+        initListDateTimeBooking();
         setListCinemaLocation();
     }
 
@@ -38,7 +36,7 @@ class _MoviesBookingPageState extends State<MoviesBookingPage> {
             name: 'Cihampelas (Ciwalk)',
             distance: 3.2,
             typeDistance: 'Km',
-            listBookingHours: getListBookingHourCiwalk()
+            listBookingHours: getListBookingHour()
         ));
 
         // set ulang listBookingHour
@@ -47,39 +45,29 @@ class _MoviesBookingPageState extends State<MoviesBookingPage> {
             name: 'Bandung Indah Plaza (BIP)',
             distance: 5.2,
             typeDistance: 'Km',
-            listBookingHours: getListBookingHourBIP()
+            listBookingHours: getListBookingHour()
         ));
 
         // set ulang listBookingHour
         listBookingHour = new List<BookingHour>();
+        listCinemaLocation.add(new CinemaLocation(
+            name: 'Paris Van Java (PVJ)',
+            distance: 5.2,
+            typeDistance: 'Km',
+            listBookingHours: getListBookingHour()
+        ));
+
+        // set ulang listBookingHour
+        listBookingHour = new List<BookingHour>();
+        listCinemaLocation.add(new CinemaLocation(
+            name: 'Bandung Trade Mall (BTC)',
+            distance: 5.2,
+            typeDistance: 'Km',
+            listBookingHours: getListBookingHour()
+        ));
     }
 
-    List<BookingHour> getListBookingHourCiwalk() {
-        listBookingHour.add(new BookingHour(
-            hour: '09:30 AM',
-            status: BookingHour.almostFull,
-            dateTime: DateTime.now(),
-        ));
-        listBookingHour.add(new BookingHour(
-            hour: '12:30 AM',
-            status: BookingHour.available,
-            dateTime: DateTime.now(),
-        ));
-        listBookingHour.add(new BookingHour(
-            hour: '03:00 AM',
-            status: BookingHour.available,
-            dateTime: DateTime.now(),
-        ));
-        listBookingHour.add(new BookingHour(
-            hour: '08:40 AM',
-            status: BookingHour.available,
-            dateTime: DateTime.now(),
-        ));
-
-        return listBookingHour;
-    }
-
-    List<BookingHour> getListBookingHourBIP() {
+    List<BookingHour> getListBookingHour() {
         listBookingHour.add(new BookingHour(
             hour: '08:00 AM',
             status: BookingHour.almostFull,
@@ -109,7 +97,7 @@ class _MoviesBookingPageState extends State<MoviesBookingPage> {
         return listBookingHour;
     }
 
-    void setListDateTime() {
+    void initListDateTimeBooking() {
         final items = List<DateTime>.generate(10, (i) =>
         DateTime.utc(
             DateTime.now().year,
@@ -117,8 +105,10 @@ class _MoviesBookingPageState extends State<MoviesBookingPage> {
             DateTime.now().day,
         ).add(Duration(days: i)));
 
-        items.forEach((element) {
-            listDateTime.add(new ListDateTime(dateTime: element));
+        items.forEach((dateTime) {
+            listDateTimeBooking.add(
+                new DateTimeBooking(dateTime: dateTime, selected: false)
+            );
         });
     }
 
@@ -137,116 +127,42 @@ class _MoviesBookingPageState extends State<MoviesBookingPage> {
                 iconTheme: IconThemeData(color: Theme.of(context).primaryColor)
             ),
             backgroundColor: Colors.white,
-            floatingActionButton: FloatingActionButton(
-                onPressed: () {
-                    print(listDateTime.length);
-                    print(listCinemaLocation.length);
-                    listCinemaLocation.forEach((element) {
-                        print(element.listBookingHours.length); 
-                    });
-                },
-                child: Text('click'),
-            ),
-            body: SingleChildScrollView(
-                child: Column(
-                    children: [
-                        Container(
-                            height: 100,
-                            padding: EdgeInsets.all(10),
-                            child: ListView.builder(
-                                scrollDirection: Axis.horizontal,
-                                itemCount: listDateTime.length,
-                                itemBuilder: (BuildContext context, int index) {
-                                    ListDateTime dateTimeList = listDateTime[index];
-
-                                    return ButtonSelectedBooking(
-                                        listDateTime: dateTimeList,
-                                        buttonSelect: buttonSelect,
-                                        textButtonColor: textButtonColor,
-                                        colorButton: colorButton,
-                                    );
-                                }
-                            ),
-                        )
-                    ],
-                ),
-            )
-        );
-    }
-}
-
-class ButtonSelectedBooking extends StatefulWidget {
-    var textButtonColor;
-    var buttonSelect;
-    var colorButton;
-    ListDateTime listDateTime;
-    
-    ButtonSelectedBooking({
-        @required this.textButtonColor,
-        @required this.buttonSelect,
-        @required this.colorButton,
-        @required this.listDateTime
-    });
-
-    @override
-    _ButtonSelectedBookingState createState() => _ButtonSelectedBookingState();
-}
-
-class _ButtonSelectedBookingState extends State<ButtonSelectedBooking> {
-    @override
-    Widget build(BuildContext context) {
-        return Container(
-            height: 85,
-            width: 85,
-            margin: EdgeInsets.only(right: 15),
-            child: FlatButton(
-                textColor: this.widget.textButtonColor,
-                color: this.widget.colorButton,
-                child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                        Text(
-                            this.widget.listDateTime.getDayName(),
-                            style: TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.w300,
+            body: Column(
+                children: [
+                    Container(
+                        height: 200,
+                        width: MediaQuery.of(context).size.width,
+                        margin: EdgeInsets.only(bottom: 20),
+                        decoration: BoxDecoration(
+                            color: Colors.purple,
+                            gradient: LinearGradient(
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                                colors: [
+                                    Colors.purple,
+                                    Colors.deepPurpleAccent,
+                                ]
                             ),
                         ),
-                        SizedBox(height: 5),
-                        Text(
-                            this.widget.listDateTime.dateTime.day.toString(),
-                            style: TextStyle(
-                                fontSize: 25,
-                                fontWeight: FontWeight.w600,
+                    ),
+                    Expanded(
+                        child: Container(
+                            margin: EdgeInsets.only(left: 10),
+                            child: Column(
+                                children: [
+                                    Container(
+                                        height: MediaQuery.of(context).size.height * 0.11,
+                                        child: ButtonSelectedDate(listDateTimeBooking: listDateTimeBooking)
+                                    ),
+                                    SizedBox(height: 35),
+                                    Expanded(
+                                        child: ButtonSelectedTime(listCinemaLocation: this.listCinemaLocation)
+                                    )
+                                ],
                             ),
-                        )
-                    ],
-                ),
-                onPressed: () {
-                    if (this.widget.buttonSelect) {
-                        setState(() {
-                            this.widget.buttonSelect = false;
-                            this.widget.textButtonColor = Colors.black;
-                            this.widget.colorButton = Colors.white;
-                        });
-                    } else {
-                        setState(() {
-                            this.widget.buttonSelect = true;
-                            this.widget.textButtonColor = Colors.white;
-                            this.widget.colorButton = Colors.purple;
-                        });
-                    }
-                },
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(
-                        10 
-                    ),
-                    side: BorderSide(
-                        color: Colors.purple,
-                    ),
-                ),
-                highlightColor: Colors.purple,
+                        ),
+                    )
+                ],
             )
         );
     }
