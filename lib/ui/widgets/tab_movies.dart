@@ -40,29 +40,34 @@ class _TabMoviesState extends State<TabMovies> {
         return Container(
             height: MediaQuery.of(context).size.height * 0.053,
             margin: EdgeInsets.only(bottom: 15),
-            child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: this.widget.listCategoryMovies.length,
-                itemBuilder: (BuildContext context, int index) {
-                    return InkWell(
-                        onTap: () {
-                            updateListCategoryMoviesActive(index);
-                        },
-                        child: Container(
-                            padding: (index == 0) ? EdgeInsets.only(top: 10, bottom: 10, right: 10) : EdgeInsets.all(10),
-                            child: Text(this.widget.listCategoryMovies[index].name),
-                            decoration: BoxDecoration(
-                                border: Border(
-                                    bottom: BorderSide(
-                                        color: Colors.purple,
-                                        width: (this.widget.listCategoryMovies[index].active) ? 5 : 1,
+            child: NotificationListener<OverscrollIndicatorNotification>(
+                onNotification: (overscroll) {
+                    overscroll.disallowGlow();
+                },
+                child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: this.widget.listCategoryMovies.length,
+                    itemBuilder: (BuildContext context, int index) {
+                        return InkWell(
+                            onTap: () {
+                                updateListCategoryMoviesActive(index);
+                            },
+                            child: Container(
+                                padding: (index == 0) ? EdgeInsets.only(top: 10, bottom: 10, right: 10) : EdgeInsets.all(10),
+                                child: Text(this.widget.listCategoryMovies[index].name),
+                                decoration: BoxDecoration(
+                                    border: Border(
+                                        bottom: BorderSide(
+                                            color: Colors.purple,
+                                            width: (this.widget.listCategoryMovies[index].active) ? 5 : 1,
+                                        )
                                     )
                                 )
-                            )
-                        ),
-                    );
-                }
-            ),
+                            ),
+                        );
+                    }
+                ),
+            )
         );
     }
 
@@ -79,20 +84,25 @@ class _TabMoviesState extends State<TabMovies> {
     Widget contentMoviesTabLine() {
         return Container(
             height: MediaQuery.of(context).size.height * 0.33,
-            child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: this.widget.listMovies.length,
-                itemBuilder: (BuildContext context, int index) {
-                    Movies movies = this.widget.listMovies[index];
-
-                    return InkWell(
-                        onTap: () {
-                            return Navigator.push(
-                                context, MaterialPageRoute(builder: (_) => MoviesDetailPage(movies: movies)));
-                        },
-                        child: CardMovies(movies: movies),
-                    );
+            child: NotificationListener<OverscrollIndicatorNotification>(
+                onNotification: (overscroll) {
+                    overscroll.disallowGlow();
                 },
+                child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: this.widget.listMovies.length,
+                    itemBuilder: (BuildContext context, int index) {
+                        Movies movies = this.widget.listMovies[index];
+
+                        return InkWell(
+                            onTap: () {
+                                return Navigator.push(
+                                    context, MaterialPageRoute(builder: (_) => MoviesDetailPage(movies: movies)));
+                            },
+                            child: CardMovies(movies: movies),
+                        );
+                    },
+                )
             )
         );
     }

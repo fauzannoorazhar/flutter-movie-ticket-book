@@ -74,32 +74,37 @@ class _MoviesDetailPageState extends State<MoviesDetailPage> with TickerProvider
                         Container(
                             margin: EdgeInsets.fromLTRB(10, 5, 10, 0),
                             height: MediaQuery.of(context).size.height * 0.6,
-                            child: TabBarView(
-                                controller: _controller,
-                                children: [
-                                    Text(
-                                        widget.movies.plot,
-                                        style: TextStyle(
-                                            fontSize: 14,
-                                            height: 1.8
+                            child: NotificationListener<OverscrollIndicatorNotification>(
+                                onNotification: (overscroll) {
+                                    overscroll.disallowGlow();
+                                }, 
+                                child: TabBarView(
+                                    controller: _controller,
+                                    children: [
+                                        Text(
+                                            widget.movies.plot,
+                                            style: TextStyle(
+                                                fontSize: 14,
+                                                height: 1.8
+                                            ),
                                         ),
-                                    ),
-                                    Text(
-                                        widget.movies.writer,
-                                        style: TextStyle(
-                                            fontSize: 14,
-                                            height: 1.8
+                                        Text(
+                                            widget.movies.writer,
+                                            style: TextStyle(
+                                                fontSize: 14,
+                                                height: 1.8
+                                            ),
                                         ),
-                                    ),
-                                    Text(
-                                        widget.movies.actors,
-                                        style: TextStyle(
-                                            fontSize: 14,
-                                            height: 1.8
+                                        Text(
+                                            widget.movies.actors,
+                                            style: TextStyle(
+                                                fontSize: 14,
+                                                height: 1.8
+                                            ),
                                         ),
-                                    ),
-                                ],
-                            ),
+                                    ],
+                                ),
+                            )
                         )
                     ],
                 )
