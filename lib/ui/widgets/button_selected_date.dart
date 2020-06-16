@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:mf_movie_ticket_book/models/DateTimeBooking.dart';
 
 class ButtonSelectedDate extends StatefulWidget {
-    List<DateTimeBooking> listDateTimeBooking;
+    final List<DateTimeBooking> listDateTimeBooking;
+    final Function setUserBookingMovies;
 
     ButtonSelectedDate({
         @required this.listDateTimeBooking,
+        @required this.setUserBookingMovies
     });
 
     @override
@@ -64,6 +66,7 @@ class _ButtonSelectedDateState extends State<ButtonSelectedDate> {
                     ],
                 ),
                 onPressed: () {
+                    this.widget.setUserBookingMovies(null, dateTimeBooking);
                     if (dateTimeBooking.selected) {
                         setState(() {
                             dateTimeBooking.selected = false;
@@ -77,7 +80,7 @@ class _ButtonSelectedDateState extends State<ButtonSelectedDate> {
                 },
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(
-                        10 
+                        25
                     ),
                     side: BorderSide(
                         color: Colors.purple,

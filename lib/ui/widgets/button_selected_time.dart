@@ -4,9 +4,11 @@ import 'package:mf_movie_ticket_book/models/CinemaLocation.dart';
 
 class ButtonSelectedTime extends StatefulWidget {
     final List<CinemaLocation> listCinemaLocation;
+    final Function setUserBookingMovies;
     
     ButtonSelectedTime({
-        @required this.listCinemaLocation
+        @required this.listCinemaLocation,
+        @required this.setUserBookingMovies
     });
 
     @override
@@ -35,7 +37,7 @@ class _ButtonSelectedTimeState extends State<ButtonSelectedTime> {
     Widget listCinemaLocation(CinemaLocation cinemaLocation) {
         return Container(
             height: 100,
-            margin: EdgeInsets.only(bottom: 10),
+            margin: EdgeInsets.only(bottom: 25),
             child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -80,7 +82,7 @@ class _ButtonSelectedTimeState extends State<ButtonSelectedTime> {
                     ),
                     Divider(
                         color: Colors.purple,
-                        height: 2,
+                        height: 10,
                     )
                 ],
             ),
@@ -95,6 +97,7 @@ class _ButtonSelectedTimeState extends State<ButtonSelectedTime> {
                 textColor: bookingHour.textButtonSelectedColor(),
                 splashColor: Colors.purple,
                 onPressed: () {
+                    this.widget.setUserBookingMovies(bookingHour, null);
                     if (bookingHour.selected) {
                         setState(() {
                             bookingHour.selected = false;
@@ -111,7 +114,7 @@ class _ButtonSelectedTimeState extends State<ButtonSelectedTime> {
                 ),
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.all(
-                        Radius.circular(10)
+                        Radius.circular(30)
                     ),
                     side: BorderSide(
                         color: Theme.of(context).primaryColor
