@@ -95,4 +95,18 @@ class UserBookingMovies {
 
         return list;
     }
+
+    bool validate() {
+        if (
+            this.movies != null && 
+            this.user != null && 
+            this.dateTimeBooking != null && 
+            this.bookingHour != null && 
+            this.seats != null && 
+            this.ticketState != null) {
+            return true;
+        }
+
+        return false;
+    }
 }

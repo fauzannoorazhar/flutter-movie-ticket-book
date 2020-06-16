@@ -5,6 +5,7 @@ import 'package:mf_movie_ticket_book/models/CinemaLocation.dart';
 import 'package:mf_movie_ticket_book/models/DateTimeBooking.dart';
 import 'package:mf_movie_ticket_book/models/Movies.dart';
 import 'package:mf_movie_ticket_book/models/UserBookingMovies.dart';
+import 'package:mf_movie_ticket_book/ui/views/movies_selectedseat_page.dart';
 import 'package:mf_movie_ticket_book/ui/widgets/button_selected_date.dart';
 import 'package:mf_movie_ticket_book/ui/widgets/button_selected_time.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
@@ -177,6 +178,11 @@ class _MoviesBookingPageState extends State<MoviesBookingPage> {
                     if (this.userBookingMovies.dateTimeBooking != null && this.userBookingMovies.bookingHour != null) {
                         if (panelController.isPanelOpen) {
                             // show dialog
+                            if (this.userBookingMovies.validate()) {
+                                Navigator.push(context, MaterialPageRoute(builder: (_) => MoviesSelectedseatPage(userBookingMovies: this.userBookingMovies)));
+                            } else {
+                                return Toast.show("Ada yang belum terisi", context, duration: Toast.LENGTH_SHORT, gravity:  Toast.BOTTOM);
+                            }
                             panelController.close();
                         } else if (panelController.isPanelClosed) {
                             panelController.open();
