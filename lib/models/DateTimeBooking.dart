@@ -1,24 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:mf_movie_ticket_book/models/CinemaLocation.dart';
+import 'package:intl/intl.dart';
 
-class BookingHour {
-    String hour;
-    int status;
+class DateTimeBooking {
     DateTime dateTime;
-    CinemaLocation cinemaLocation;
     bool selected;
 
-    static const int available = 1;
-    static const int fillingFast = 1;
-    static const int almostFull = 1;
-
-    BookingHour({
-        this.hour,
-        this.status,
+    DateTimeBooking({
         this.dateTime,
-        this.cinemaLocation,
         this.selected = false
     });
+
+    String getDayName() {
+        return DateFormat('EE').format(this.dateTime);
+    }
 
     Color textButtonSelectedColor() {
         if (this.selected) {
