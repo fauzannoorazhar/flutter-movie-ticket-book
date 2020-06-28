@@ -64,11 +64,18 @@ class _MoviesHomePageState extends State<MoviesHomePage> {
                 backgroundColor: Colors.white,
                 title: Text('Movies', style: TextStyle(color: Colors.purple)),
                 centerTitle: true,
+                leading: Padding(
+                    padding: EdgeInsets.all(15),
+                    child: FaIcon(
+                        Icons.notifications,
+                        color: Colors.purple,
+                    )
+                ),
                 actions: [
                     Padding(
                         padding: EdgeInsets.all(15),
                         child: FaIcon(
-                            FontAwesomeIcons.bell,
+                            Icons.search,
                             color: Colors.purple,
                         )
                     )
